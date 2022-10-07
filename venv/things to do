@@ -1,0 +1,6 @@
+grab the prices and update the spreadsheet with those prices if those prices are less than what's in the spreadsheet
+When a low price is found the spreadsheet will update and a sms will be send notifying me of the change and what
+the new value is. That way you can let this run for a while to gather what really is the lowest price for these type of flights.
+
+can also create something to compare the last price to see if it is within say 10% of the lowest price found.
+this wont update the speadsheet but rather send just the sms
