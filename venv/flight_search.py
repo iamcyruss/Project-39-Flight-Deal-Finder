@@ -2,7 +2,6 @@ import os
 import requests
 from datetime import date, timedelta
 from data_manager import DataManager
-from requests_toolbelt.utils import dump
 
 
 SHEETY_BEARER_TOKEN = os.environ.get("SHEETY_BEARER_TOKEN")
