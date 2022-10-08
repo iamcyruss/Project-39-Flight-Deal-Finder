@@ -32,15 +32,19 @@ for i in DATA:
     kiwi_json = kiwi_response.json()
     print(kiwi_json['data'])
     for count, price in enumerate(kiwi_json['data']):
-        if len(price['route']) == 1:
-            print(f"Route: {count + 1}\nPrice: {price['price']}\nBag Prices: {price['bags_price']}")
-        else:
-            print(f"Price: {price['price']}\nBag Prices: {price['bags_price']}")
+        if len(price['route']) == 1 and count == 0:
+            print(f"Price: ${price['price']}\nBag Prices: {price['bags_price']}\n"
+                  f"From: {price['route'][0]['cityFrom']} To: {price['route'][0]['cityTo']}\n"
+                  f"Depart: {price['route'][0]['utc_departure']}\nArrive: {price['route'][0]['utc_arrival']}\n"
+                  f"-------------------------------------------------------------------")
+        elif len(price['route']) > 1:
+            print(f"Price: ${price['price']}\nBag Prices: ${price['bags_price']}")
             for route_count, route in enumerate(price['route']):
                 print(f"Stop {route_count + 1}: From: {route['cityFrom']} To: {route['cityTo']}\n"
                       f"Depart: {route['utc_departure']}\nArrive: {route['utc_arrival']}\n"
                       f"-------------------------------------------------------------------")
-
+        else:
+            pass
 
 
 class FlightSearch:
