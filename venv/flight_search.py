@@ -12,6 +12,8 @@ class FlightSearch:
         SHEETY_BEARER_TOKEN = os.environ.get("SHEETY_BEARER_TOKEN")
         DATA = DataManager.sheety_get(SHEETY_BEARER_TOKEN)['prices']
         TOMORROW = (date.today() + timedelta(days=1)).strftime('%d/%m/%Y')
+        SEVEN = (date.today() + timedelta(days=8)).strftime('%d/%m/%Y')
+        TWENTYEIGHT = (date.today() + timedelta(days=29)).strftime('%d/%m/%Y')
         ONEEIGHTY_FROM_TODAY = (date.today() + timedelta(days=180)).strftime('%d/%m/%Y')
         KIWI_HEADERS = {
             "accept": "application/json",
@@ -26,6 +28,7 @@ class FlightSearch:
                 "date_to": ONEEIGHTY_FROM_TODAY,
                 "curr": "USD",
                 "locale": "en",
+                "partner_market": "us",
                 "limit": 5
             }
             KIWI_FLYBACK_PAYLOAD = {
@@ -35,17 +38,33 @@ class FlightSearch:
                 "date_to": ONEEIGHTY_FROM_TODAY,
                 "curr": "USD",
                 "locale": "en",
+                "partner_market": "us",
+                "limit": 5
+            }
+            KIWI_ROUNDTRIP_PAYLOAD = {
+                "fly_from": 'DEN',
+                "fly_to": i['iataCode'],
+                "return_from": SEVEN,
+                "return_to": TWENTYEIGHT,
+                "flight_type": "round",
+                "curr": "USD",
+                "locale": "en",
+                "partner_market": "us",
                 "limit": 5
             }
             KIWI_ENDPOINT = "https://api.tequila.kiwi.com/v2/search/"
-            kiki_flyto_response = requests.get(url=KIWI_ENDPOINT, headers=KIWI_HEADERS, params=KIWI_FLYTO_PAYLOAD)
+            """kiki_flyto_response = requests.get(url=KIWI_ENDPOINT, headers=KIWI_HEADERS, params=KIWI_FLYTO_PAYLOAD)
             kiki_flyto_response.raise_for_status()
             kiwi_flyto_json = kiki_flyto_response.json()
             kiwi_flyback_response = requests.get(url=KIWI_ENDPOINT, headers=KIWI_HEADERS, params=KIWI_FLYBACK_PAYLOAD)
             kiwi_flyback_response.raise_for_status()
-            kiwi_flyback_json = kiwi_flyback_response.json()
-            FlightData.flight_data_formatter(self, i, flight_data_json=kiwi_flyto_json)
-            FlightData.flight_data_formatter(self, i, flight_data_json=kiwi_flyback_json)
+            kiwi_flyback_json = kiwi_flyback_response.json()"""
+            kiwi_roundtrip_response = requests.get(url=KIWI_ENDPOINT, headers=KIWI_HEADERS, params=KIWI_ROUNDTRIP_PAYLOAD)
+            kiwi_roundtrip_response.raise_for_status()
+            kiwi_roundtrip_json = kiwi_roundtrip_response.json()
+            #FlightData.flight_data_formatter(self, i, flight_data_json=kiwi_flyto_json)
+            #FlightData.flight_data_formatter(self, i, flight_data_json=kiwi_flyback_json)
+            FlightData.flight_data_formatter(self, i, flight_data_json=kiwi_roundtrip_json)
             """
             print(f"Fly To Raw Data: {kiwi_flyto_json['data']}")
             print(f"Fly Back Raw Data:{kiwi_flyback_json['data']}")

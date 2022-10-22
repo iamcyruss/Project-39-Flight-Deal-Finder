@@ -29,7 +29,7 @@ class FlightData:
                                f"Arrive: {arrival_date[0]} {arrival_time[0]}\n" \
                                f"-------------------------------\n"
                     print(f"sms_list: {sms_list}")
-                    NotificationManager.send_sms(self, sms_list)
+                    #NotificationManager.send_sms(self, sms_list)
             elif len(price_to['route']) > 1:
                 #print(f"Price To: ${price_to['price']} Low Price: ${i['lowestPrice']}\n"
                       #f"Bag Prices To: ${price_to['bags_price']}")
@@ -52,15 +52,20 @@ class FlightData:
                                    f"Depart: {departure_date[0]} {departure_time[0]}\n" \
                                    f"Arrive: {arrival_date[0]} {arrival_time[0]}\n" \
                                    f"-------------------------------\n"
-                if len(sms_list) > 0 and flight_data_json['data'][0]['flyFrom'] == 'DEN':
+                    else:
+                        pass
+
+                print(f"Round Trip Flights: {sms_list}")
+                # NotificationManager.send_sms(self, sms_list=f"Departing Flights: {sms_list}")
+                """if len(sms_list) > 0 and flight_data_json['data'][0]['flyFrom'] == 'DEN':
                     print(f"Departing Flights: {sms_list}")
                     #print(len(sms_list))
-                    NotificationManager.send_sms(self, sms_list=f"Departing Flights: {sms_list}")
+                    #NotificationManager.send_sms(self, sms_list=f"Departing Flights: {sms_list}")
                 elif len(sms_list) > 0 and flight_data_json['data'][0]['flyTo'] == 'DEN':
                     print(f"Returning Flights: {sms_list}")
                     #print(len(sms_list))
-                    NotificationManager.send_sms(self, sms_list=f"Returning Flights: {sms_list}")
+                    #NotificationManager.send_sms(self, sms_list=f"Returning Flights: {sms_list}")
                 else:
-                    pass
+                    pass"""
             else:
                 pass
