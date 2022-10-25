@@ -34,6 +34,8 @@ class FlightData:
                 #print(f"Price To: ${price_to['price']} Low Price: ${i['lowestPrice']}\n"
                       #f"Bag Prices To: ${price_to['bags_price']}")
                 sms_list = ''
+                depart_counter = 0
+                return_counter = 0
                 for route_count, route in enumerate(price_to['route']):
                     #print(f"Stop {route_count + 1}: From: {route['cityFrom']} To: {route['cityTo']}\n"
                           #f"Depart: {route['utc_departure']}\nArrive: {route['utc_arrival']}\n"
@@ -45,17 +47,30 @@ class FlightData:
                     arrival_time = arrival_date[1].split('.')
                     # print(f"Arrival dates: {arrival_date[0]} {arrival_time[0]}")
                     if int(price_to['price']) < int(i['lowestPrice']):
-                        sms_list = f"{sms_list}\nStop {route_count + 1}:\n" \
-                                   f"From: {price_to['route'][route_count]['cityFrom']}\n" \
-                                   f"To: {price_to['route'][route_count]['cityTo']}\n" \
-                                   f"Price: ${price_to['price']}\n" \
-                                   f"Depart: {departure_date[0]} {departure_time[0]}\n" \
-                                   f"Arrive: {arrival_date[0]} {arrival_time[0]}\n" \
-                                   f"-------------------------------\n"
+                        if price_to['route'][route_count]['return'] == 0:
+                            depart_counter += 1
+                            sms_list = f"{sms_list}\nDeparting Flight #{depart_counter}:\n" \
+                                       f"From: {price_to['route'][route_count]['cityFrom']}\n" \
+                                       f"To: {price_to['route'][route_count]['cityTo']}\n" \
+                                       f"Price: ${price_to['price']}\n" \
+                                       f"Depart: {departure_date[0]} {departure_time[0]}\n" \
+                                       f"Arrive: {arrival_date[0]} {arrival_time[0]}\n" \
+                                       f"-------------------------------\n"
+                        else:
+                            return_counter += 1
+                            sms_list = f"{sms_list}\nReturning Flight #{return_counter}:\n" \
+                                       f"From: {price_to['route'][route_count]['cityFrom']}\n" \
+                                       f"To: {price_to['route'][route_count]['cityTo']}\n" \
+                                       f"Price: ${price_to['price']}\n" \
+                                       f"Depart: {departure_date[0]} {departure_time[0]}\n" \
+                                       f"Arrive: {arrival_date[0]} {arrival_time[0]}\n" \
+                                       f"-------------------------------\n"
                     else:
                         pass
-
-                print(f"Round Trip Flights: {sms_list}")
+                if len(sms_list) > 0:
+                    print(f"Round Trip Flights: {sms_list}")
+                else:
+                    pass
                 # NotificationManager.send_sms(self, sms_list=f"Departing Flights: {sms_list}")
                 """if len(sms_list) > 0 and flight_data_json['data'][0]['flyFrom'] == 'DEN':
                     print(f"Departing Flights: {sms_list}")

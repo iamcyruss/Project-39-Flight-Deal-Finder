@@ -1,6 +1,6 @@
 import os
 import requests
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from data_manager import DataManager
 from flight_data import FlightData
 
@@ -8,12 +8,16 @@ from flight_data import FlightData
 class FlightSearch:
     #This class is responsible for talking to the Flight Search API.
 
-    def grab_flight_data(self, KIWI_API_KEY):
+    def grab_flight_data(self, KIWI_API_KEY, begin_window, end_window):
         SHEETY_BEARER_TOKEN = os.environ.get("SHEETY_BEARER_TOKEN")
         DATA = DataManager.sheety_get(SHEETY_BEARER_TOKEN)['prices']
         TOMORROW = (date.today() + timedelta(days=1)).strftime('%d/%m/%Y')
-        SEVEN = (date.today() + timedelta(days=8)).strftime('%d/%m/%Y')
-        TWENTYEIGHT = (date.today() + timedelta(days=29)).strftime('%d/%m/%Y')
+        user_depart_date = datetime.strptime(begin_window, '%d/%m/%Y').date()
+        user_depart_days = user_depart_date - date.today()
+        SEVEN = (date.today() + timedelta(days=user_depart_days.days)).strftime('%d/%m/%Y')
+        user_return_date = datetime.strptime(end_window, '%d/%m/%Y').date()
+        user_return_days = user_return_date - date.today()
+        TWENTYEIGHT = (date.today() + timedelta(days=user_return_days.days)).strftime('%d/%m/%Y')
         ONEEIGHTY_FROM_TODAY = (date.today() + timedelta(days=180)).strftime('%d/%m/%Y')
         KIWI_HEADERS = {
             "accept": "application/json",
@@ -59,12 +63,15 @@ class FlightSearch:
             kiwi_flyback_response = requests.get(url=KIWI_ENDPOINT, headers=KIWI_HEADERS, params=KIWI_FLYBACK_PAYLOAD)
             kiwi_flyback_response.raise_for_status()
             kiwi_flyback_json = kiwi_flyback_response.json()"""
-            kiwi_roundtrip_response = requests.get(url=KIWI_ENDPOINT, headers=KIWI_HEADERS, params=KIWI_ROUNDTRIP_PAYLOAD)
-            kiwi_roundtrip_response.raise_for_status()
-            kiwi_roundtrip_json = kiwi_roundtrip_response.json()
+            try:
+                kiwi_roundtrip_response = requests.get(url=KIWI_ENDPOINT, headers=KIWI_HEADERS, params=KIWI_ROUNDTRIP_PAYLOAD)
+                #kiwi_roundtrip_response.raise_for_status()
+                kiwi_roundtrip_json = kiwi_roundtrip_response.json()
+                FlightData.flight_data_formatter(self, i, flight_data_json=kiwi_roundtrip_json)
+            except KeyError:
+                print(f"No data for {i['iataCode']}.")
             #FlightData.flight_data_formatter(self, i, flight_data_json=kiwi_flyto_json)
             #FlightData.flight_data_formatter(self, i, flight_data_json=kiwi_flyback_json)
-            FlightData.flight_data_formatter(self, i, flight_data_json=kiwi_roundtrip_json)
             """
             print(f"Fly To Raw Data: {kiwi_flyto_json['data']}")
             print(f"Fly Back Raw Data:{kiwi_flyback_json['data']}")
