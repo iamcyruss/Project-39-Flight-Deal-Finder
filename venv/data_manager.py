@@ -30,9 +30,10 @@ class DataManager:
             }
         }
         new_user_post = requests.post(url=SHEETY_ENDPOINT_USERS, headers=SHEETY_HEADERS, json=new_user_data)
-        new_user_response = new_user_post.json()
+        #new_user_response = new_user_post.json()
         new_user_post.raise_for_status()
-        print(new_user_response)
+        #print(new_user_response)
+        DataManager.get_user_datails(self, SHEETY_BEARER_TOKEN=SHEETY_BEARER_TOKEN)
 
 
     def get_user_datails(self, SHEETY_BEARER_TOKEN):
@@ -56,7 +57,8 @@ class DataManager:
         }
         delete_user_response = requests.delete(url=SHEET_DELETE_USER_ENDPOINT, headers=SHEETY_HEADERS)
         delete_user_response.raise_for_status()
-        print(delete_user_response)
+        DataManager.get_user_datails(self, SHEETY_BEARER_TOKEN=SHEETY_BEARER_TOKEN)
+        #print(delete_user_response)
 
 
     def edit_user_details(self, SHEETY_BEARER_TOKEN, user_id, user_details):
@@ -66,9 +68,10 @@ class DataManager:
             "Authorization": SHEETY_BEARER_TOKEN
         }
         edit_user_details_response = requests.put(url=SHEET_DELETE_USER_ENDPOINT, headers=SHEETY_HEADERS, json=user_details)
-        #edit_user_details_response.raise_for_status()
-        edit_user_details_response_json = edit_user_details_response.json()
-        print(edit_user_details_response_json)
+        edit_user_details_response.raise_for_status()
+        #edit_user_details_response_json = edit_user_details_response.json()
+        #print(edit_user_details_response_json)
+        DataManager.get_user_datails(self, SHEETY_BEARER_TOKEN=SHEETY_BEARER_TOKEN)
 
 #data = DataManager.sheety_get()
 #print(DataManager.sheety_get()['prices'])

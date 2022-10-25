@@ -4,7 +4,7 @@ import os
 class FlightData:
     #This class is responsible for structuring the flight data.
 
-    def flight_data_formatter(self, i, flight_data_json):
+    def flight_data_formatter(self, i, flight_data_json, SMTPTOKEN):
 
         print(f"Fly To Raw Data: {flight_data_json['data']}")
         for count, price_to in enumerate(flight_data_json['data']):

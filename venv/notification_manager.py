@@ -12,3 +12,7 @@ class NotificationManager:
         client = Client(SMS_ACCOUNT_SID, SMS_AUTH_TOKEN)
         message = client.messages.create(body=sms_list, from_=FROM_, to='+14253810699')
         print(message.sid)
+
+
+    def send_emails(self, sms_list, SMTPTOKEN):
+        pass

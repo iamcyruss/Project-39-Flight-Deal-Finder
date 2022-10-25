@@ -8,7 +8,7 @@ from flight_data import FlightData
 class FlightSearch:
     #This class is responsible for talking to the Flight Search API.
 
-    def grab_flight_data(self, KIWI_API_KEY, begin_window, end_window):
+    def grab_flight_data(self, KIWI_API_KEY, begin_window, end_window, SMTPTOKEN):
         SHEETY_BEARER_TOKEN = os.environ.get("SHEETY_BEARER_TOKEN")
         DATA = DataManager.sheety_get(SHEETY_BEARER_TOKEN)['prices']
         TOMORROW = (date.today() + timedelta(days=1)).strftime('%d/%m/%Y')
@@ -67,7 +67,7 @@ class FlightSearch:
                 kiwi_roundtrip_response = requests.get(url=KIWI_ENDPOINT, headers=KIWI_HEADERS, params=KIWI_ROUNDTRIP_PAYLOAD)
                 #kiwi_roundtrip_response.raise_for_status()
                 kiwi_roundtrip_json = kiwi_roundtrip_response.json()
-                FlightData.flight_data_formatter(self, i, flight_data_json=kiwi_roundtrip_json)
+                FlightData.flight_data_formatter(self, i, flight_data_json=kiwi_roundtrip_json, SMTPTOKEN)
             except KeyError:
                 print(f"No data for {i['iataCode']}.")
             #FlightData.flight_data_formatter(self, i, flight_data_json=kiwi_flyto_json)

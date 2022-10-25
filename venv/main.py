@@ -5,10 +5,11 @@ from data_manager import DataManager
 
 
 SHEETY_BEARER_TOKEN = os.environ.get("SHEETY_BEARER_TOKEN")
+SMTPTOKEN = os.environ.get("SMTPTOKEN")
 DM = DataManager()
 running = True
 while running:
-    todo = input("Press b to search users.\n"
+    todo = input("\nPress b to search users.\n"
                  "Press a to add new user.\n"
                  "Press c to delete a user.\n"
                  "Press d to edit a user.\n"
@@ -50,4 +51,4 @@ while running:
         end_window = input("What date do you want to be back by?\n")
         FS = FlightSearch()
         KIWI_API_KEY = os.environ.get("KIWI_API_KEY")
-        FS.grab_flight_data(KIWI_API_KEY, begin_window, end_window)
+        FS.grab_flight_data(KIWI_API_KEY, begin_window, end_window, SMTPTOKEN)
