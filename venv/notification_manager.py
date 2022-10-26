@@ -1,5 +1,6 @@
 import os
 from twilio.rest import Client
+import smtplib
 
 class NotificationManager:
     #This class is responsible for sending notifications with the deal flight details.
@@ -14,5 +15,16 @@ class NotificationManager:
         print(message.sid)
 
 
-    def send_emails(self, sms_list, SMTPTOKEN):
-        pass
+    def send_emails(self, sms_list, SMTPTOKEN, EMAILS):
+        my_gmail = "russnicosia.auto@gmail.com"
+        for email in EMAILS:
+            with smtplib.SMTP("smtp.gmail.com", 587) as gmail_connection:
+                gmail_connection.starttls()
+                gmail_connection.login(user=my_gmail, password=SMTPTOKEN)
+                gmail_connection.sendmail(
+                    from_addr=my_gmail,
+                    to_addrs=email,
+                    msg=f"Subject: !!!!!! Flight Deal FOUND !!!!!!\n\n"
+                        f"{sms_list}\n\n- Automated Russ"
+                )
+

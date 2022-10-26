@@ -4,9 +4,12 @@ import os
 class FlightData:
     #This class is responsible for structuring the flight data.
 
-    def flight_data_formatter(self, i, flight_data_json, SMTPTOKEN):
+    def flight_data_formatter(self, i, flight_data_json, SMTPTOKEN, USERS):
 
         print(f"Fly To Raw Data: {flight_data_json['data']}")
+        EMAILS = []
+        for u in USERS:
+            EMAILS.append(u['email'])
         for count, price_to in enumerate(flight_data_json['data']):
             departure_date = price_to['route'][0]['utc_departure'].split('T')
             departure_time = departure_date[1].split('.')
@@ -69,6 +72,7 @@ class FlightData:
                         pass
                 if len(sms_list) > 0:
                     print(f"Round Trip Flights: {sms_list}")
+                    NotificationManager.send_emails(self, sms_list, SMTPTOKEN, EMAILS)
                 else:
                     pass
                 # NotificationManager.send_sms(self, sms_list=f"Departing Flights: {sms_list}")
